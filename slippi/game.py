@@ -13,7 +13,7 @@ FIRST_FRAME_INDEX = -123
 class Game(Base):
     """Replay data from a game of Super Smash Brothers Melee."""
 
-    def __init__(self, path):
+    def __init__(self, path=None):
         """Reads data from the Slippi (.slp) replay file at `path`."""
 
         self.metadata = None
@@ -30,7 +30,8 @@ class Game(Base):
 
         self._out_of_order = False
 
-        self._parse_file(path)
+        if path is not None:
+            self._parse_file(path)
 
     def _parse_event_payloads(self, stream):
         (code, payload_size) = unpack('BB', stream)
@@ -79,7 +80,7 @@ class Game(Base):
 
         stream = io.BytesIO(json['raw'])
         payload_sizes = self._parse_event_payloads(stream)
-
+        print(payload_sizes)
         try:
             while True:
                 event = self._parse_event(stream, payload_sizes)
